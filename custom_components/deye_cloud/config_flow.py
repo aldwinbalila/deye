@@ -107,10 +107,15 @@ class DeyeCloudConfigFlow(ConfigFlow, domain=DOMAIN):
 
             except DeyeAuthError:
                 errors["base"] = "invalid_auth"
-            except (DeyeConnectionError, aiohttp.ClientError):
+            except (DeyeConnectionError, aiohttp.ClientError) as err:
+                _LOGGER.error("Connection error during config flow: %s", err)
                 errors["base"] = "cannot_connect"
-            except Exception:
-                _LOGGER.exception("Unexpected error during config flow setup")
+            except Exception as err:
+                _LOGGER.exception(
+                    "Unexpected error during config flow setup: %s (%s)",
+                    err,
+                    type(err).__name__,
+                )
                 errors["base"] = "unknown"
             else:
                 # Check if any devices were found
@@ -364,10 +369,15 @@ class DeyeCloudOptionsFlowHandler(OptionsFlowWithConfigEntry):
                     await api.authenticate()
             except DeyeAuthError:
                 errors["base"] = "invalid_auth"
-            except (DeyeConnectionError, aiohttp.ClientError):
+            except (DeyeConnectionError, aiohttp.ClientError) as err:
+                _LOGGER.error("Connection error validating credentials: %s", err)
                 errors["base"] = "cannot_connect"
-            except Exception:
-                _LOGGER.exception("Unexpected error validating credentials")
+            except Exception as err:
+                _LOGGER.exception(
+                    "Unexpected error validating credentials: %s (%s)",
+                    err,
+                    type(err).__name__,
+                )
                 errors["base"] = "unknown"
             else:
                 # Update the config entry data with new credentials
