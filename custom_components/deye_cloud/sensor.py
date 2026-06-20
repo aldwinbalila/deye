@@ -261,11 +261,18 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Deye Cloud sensor entities from a config entry."""
+    _LOGGER.debug("Setting up Deye Cloud sensor platform")
     data = hass.data[DOMAIN][entry.entry_id]
     device_coordinators: dict[str, DeyeDeviceCoordinator] = data["device_coordinators"]
     devices_metadata: dict[str, Device] = data.get("devices_metadata", {})
     stations_metadata: dict[str, dict[str, Any]] = data.get("stations_metadata", {})
     station_devices_map: dict[str, list[str]] = data.get("station_devices_map", {})
+
+    _LOGGER.debug(
+        "Found %d device coordinators, %d devices metadata",
+        len(device_coordinators),
+        len(devices_metadata),
+    )
 
     entities: list[SensorEntity] = []
 
@@ -470,6 +477,7 @@ async def async_setup_entry(
             )
         )
 
+    _LOGGER.info("Adding %d Deye Cloud sensor entities", len(entities))
     async_add_entities(entities)
 
 
