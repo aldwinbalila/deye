@@ -29,7 +29,7 @@ A Home Assistant custom integration for monitoring and controlling Deye solar/hy
 
 1. Open HACS in your Home Assistant
 2. Go to **Integrations** → click the three dots menu → **Custom repositories**
-3. Add `https://github.com/aldwinbalila/deye` with category **Integration**
+3. Add `https://github.com/oiishiii626/deye` with category **Integration**
 4. Click **Install**
 5. Restart Home Assistant
 
