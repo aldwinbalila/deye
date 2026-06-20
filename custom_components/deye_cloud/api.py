@@ -121,9 +121,16 @@ class DeyeCloudAPI:
                         )
                     # Deye API uses "1000000" for success
                     if data.get("success") is not True and data.get("code") != "1000000":
+                        # Any auth failure (incorrect password, etc.) should be DeyeAuthError
+                        error_msg = data.get("msg") or data.get("error") or str(data)
+                        error_code = str(data.get("code", ""))
+                        if "password" in error_code.lower() or "password" in error_msg.lower():
+                            raise DeyeAuthError(
+                                f"Authentication failed: {error_msg}"
+                            )
                         raise DeyeApiError(
-                            f"Authentication failed: {data.get('msg', 'unknown error')}",
-                            error_code=str(data.get("code", "")),
+                            f"Authentication failed: {error_msg}",
+                            error_code=error_code,
                         )
 
                 # Extract token data from response
